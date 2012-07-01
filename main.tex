@@ -1,0 +1,466 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{framed, color}
+\usepackage{listings}
+
+\lstset{language=bash, numbers=left, stepnumber=1, basicstyle=\footnotesize, frame=single,}
+
+\usetheme{Warsaw}  %% Themenwahl
+
+\title{Bash-Workshop}
+\author{Michael F. Schönitzer}
+\date{14. Juli 2012}
+
+\begin{document}
+\maketitle
+ 
+%\frame{\tableofcontents[pausesections]}
+\tableofcontents
+
+\section{Grundlagen}
+\subsection{Geschichte \& Hintergründe}
+\begin{frame} %%Eine Folie
+  \frametitle{Geschichte \& Hintergründe} %%Folientitel
+  \begin{Definition} %%Definition
+    Eine Unix-Shell ist die traditionelle Benutzerschnittstelle unter Unix oder unixoiden Computer-Betriebssystemen. Die Shell ist ein Interpreter.
+  \end{Definition}
+  Geschichtlich:
+  \begin{itemize}
+   \item Thompson-Shell (osh) 1971-1979 
+   \item Bourne-Shell (sh) ab 1978
+   \item C-Shell (csh) ab 1979
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Geschichte \& Hintergründe} %%Folientitel
+  
+  \begin{itemize}
+   \item Korn Shell (ksh)
+   \item Z-Shell (zsh)
+   \item Bourne Again Shell (bash)
+   \begin{itemize}
+    \item Kompatibel zur Bourne-Shell (sh)
+    \item Die meisten Funktionen der Korn-Shell
+    \item Teile der C-Shell (csh)-Syntax
+    \item Weitere Funktionen
+    \item Standard-Shell auf den meisten Systemen
+   \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Grundlagen}
+\begin{frame}[fragile,label=code]
+ \frametitle{Grundlagen}
+ 
+ \begin{itemize}
+  \item Alles was auf der Kommandozeile eingetippt wird, kann auch in Dateien geschrieben werden und umgekehrt!
+  \item Programme, Bash built-in commands und Syntax
+  \item Hello-World:
+  \begin{lstlisting}
+    #!/bin/bash
+    
+    # Kommentar
+    echo "Hello World"
+  \end{lstlisting}
+  \item She-Bang, Kommentar, echo, Anführungszeichen
+  \item Dateiendung: .sh
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programme, Argumente, Datenströme}
+ 
+ \only<1,2>{
+ Starten eines Programms auf der Commandline:
+ \begin{semiverbatim}
+ \$ /pfad/zu/programm/programmname Arg Arg2 ...
+ \end{semiverbatim}
+ }
+ \only<2>{Pfad zum Programm kann entfallen wenn dieser im PATH enthalten. Arbeitsverzeichnis ist dort nicht, daher starten von Skripten mit {\tt./skriptname}!}
+  
+ \begin{itemize}[<+->]
+  \item Argumente
+  \item Drei Standard-Datenströme:
+   \begin{itemize}[<+->]
+     \item Standard-Out, Stdout (\#1)
+     \item Standard-In, Stdin (\#0)
+     \item Standard-Error, Stderr (\#2)
+   \end{itemize}
+ \item Rückgabewert:
+   \begin{itemize}
+       \item Null falls Programm erfolgreich
+       \item Anderer Wert je nach Fehler und Programm (Undefiniert!)
+   \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\subsection{Datenströme}
+\begin{frame}
+\frametitle{Arbeiten mit Datenströmen}
+ \begin{itemize}
+  \item Pipe: leiten Stdout von einem Programm nach Stdin eines anderen Programms um\\
+   {\tt \$ echo abc | grep a}
+  \item Umleiten in Datei\\
+   {\tt \$ echo abc 1> Dateiname}\\
+   {\tt \$ echo abc > Dateiname}\\
+   {\tt \$ echo abc >> Dateiname}
+  \item Umleiten in anderen Stream\\
+   {\tt \$ echo abc 2>\&1 Dateiname}
+  \item Wilde Kombinationen möglich!\\
+   {\tt strace echo a 2>\&1 | grep open } Kurzform: {\tt |\&} \\
+   {\tt \$ find . -name '*.html' 2>\&1 1> gefundene.txt | less }
+  \item In Datei schreiben und auf Stdout anzeigen: \\
+   {\tt \$ echo abc | tee datei }
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Kommando-Substitution}
+ Wird ersetzt mit dem Stdout eines Programms
+ \begin{lstlisting}
+   mplayer $(cat filelist)
+   mplayer `cat filelist`
+ \end{lstlisting}
+\end{frame}
+
+\subsection{Einige wichtige Programme \& Praktischer Teil I}
+\begin{frame}
+ \frametitle{Einige wichtige Programme I}
+ \begin{itemize}
+   \item echo -- Schreibt Argumente auf Stdout
+     \begin{itemize}
+       \item -e -- Interpretiert Kodierte Sonderzeichen
+       \item -n -- Deaktiviert Zeilenvorschub am Ende
+     \end{itemize}
+   \item cat -- list (mehrere) Dateien und gibt sie auf Stdout aus
+   \item grep -- Sucht (Stdin oder Datei) zeilenweise nach Ausdruck und gibt Zeilen mit Treffer aus (Stderr)
+     \begin{itemize}
+       \item -v -- gibt Zeilen ohne Treffer aus
+       \item -i -- ignoriert Groß-Kleinschreibung
+       \item -q -- gibt nichts aus (Setzt nur Rückgabewert)
+       \item ... -- siehe man
+     \end{itemize}
+   \item sort -- Sortiert Zeilen in Datei oder Stdin (alphabetisch)
+   \item date -- Zeigt Datum und Uhrzeit an
+   \item tr -- Ersetzt Zeichen durch andere oder löscht sie (-d), …
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Erste Ausprobier-Runde}
+ \begin{center}
+ Los!
+ \end{center}
+\end{frame}
+
+\section{Elemente einer Programmiersprache}
+\subsection{Variablen}
+\begin{frame}[fragile]
+ \frametitle{Variablen}
+ 
+ \begin{verbatim}
+ $ a="Hallo Welt"
+ $ b=7
+ $ c="a ist ${a} und b ist $b"
+ $ echo $c
+ a ist Hallo Welt und b ist 7
+ \end{verbatim}
+ 
+ \begin{alertblock}{Achtung!}
+  \begin{itemize}
+   \item Keine Variablentypen!
+   \item Rechnen und Vergleichen nicht direkt möglich!
+  \end{itemize}
+ \end{alertblock}
+\end{frame}
+
+\begin{frame}[<+->]
+ \frametitle{Besondere Variablen}
+ 
+ \begin{itemize}
+  \item Übergebene Argumente: \tt\$1, \$2, \$3 ...
+  \item Alle Argumente: \tt\$* oder \$@
+  \item Anzahl der Argumente: \tt\$\#
+  \item Rückgabewert des letzten Kommandos \tt\$?
+  \item Prozess-ID der Shell: \tt\$\$
+  \item Prozess-ID der letzten Unter-Shell: \tt\$!
+  \item Name des Shellskipts: \tt\$0
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Test}
+ 
+ \begin{itemize}
+  \item Kommando zum Testen von Dateien und Vergleichen von Werten
+  \item Unterscheidet zwischen Strings und Integers
+  \item Kurzschreibweise: {\tt [ ... ]}
+  \item Strings:
+  \begin{itemize}
+   \item String nicht leer: {\tt [ -n STRING ]}
+   \item Strings gleich: {\tt [ STRING1 = STRING2 ]}
+   \item Strings nicht gleich: {\tt [ STRING1 != STRING2 ]}
+  \end{itemize}
+ \item Integers:
+ \begin{itemize}
+  \item a kleiner (less than) b: {\tt [ a -lt b ]}
+  \item a kleinergleich (less equal) b: {\tt [ a -le b ]}
+  \item a gleich (equal) b: {\tt [ a -eq b ]}
+ \end{itemize}
+ \item Dateien:
+ \begin{itemize}
+  \item Datei existiert: {\tt [ -e Dateiname ]}
+  \item Datei existiert und ist Ordner: {\tt [ -d Dateiname ]}
+  \item Datei existiert und ist reguläre Datei: {\tt [ -f Dateiname ]}
+ \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\subsection{Rechnen}
+\begin{frame}[fragile]
+ \frametitle{Rechnen mit Variablen}
+ 
+ \begin{itemize}
+  \item Rechnen mit Kommando let
+  \item Kurzform (( ... ))
+  \item Gibt nichts auf stdout aus!
+  \item Kann auch vergleichen.
+  \item Rechnet nur mit Integers!
+ \end{itemize}
+ \begin{lstlisting}
+  x=7; y=3
+  ((x=x*2+y)) # x=17
+  ((y++))     # y=4
+  ((y==3))    # false
+  echo $((4+7))
+ \end{lstlisting}
+\end{frame}
+
+\subsection{Programmsteuerung}
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: If-Else} 
+  \begin{lstlisting}
+  if <Bedingung>; then
+    <...>
+  elif <Bedingung>; then
+    <...>
+  else
+    <...>
+  fi
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: For-Schleife} 
+   \begin{lstlisting}
+    for ((<Ausdruck>; <Ausdruck>; <Ausdruck>)) ; do
+      <Kommandos>
+    done
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: For-In-Schleife} 
+  \begin{lstlisting}
+    for <Variablenname> in <Liste> ; do
+      <Kommandos>
+    done
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: While-Schleife} 
+  \begin{lstlisting}
+  while <Kommandos>; do
+   <Kommandos>
+  done
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: Until-Schleife} 
+  \begin{lstlisting}
+  until <Kommandos>; do
+   <Kommandos>
+  done
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+ \frametitle{break \& continue}
+  \begin{itemize}
+   \item {\tt break} -- Beendet eine Schleife
+   \item {\tt continue} -- Springt zum nächsten Schleifendurchlauf
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Programmsteuerung: Case} 
+  \begin{lstlisting}
+  case <Wort> in
+    Muster) <Kommandos> ;;
+    Muster) <Kommandos> ;;
+  esac
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Kontrollstrukturen und Sreams}
+ 
+ Kontrollstrukturen (if, for, while…) geben Streams weiter.
+ \medskip 
+ 
+ Gebräuchliches Beispiel:
+ \begin{lstlisting}
+  while read line
+    echo $line;
+  done < myfile
+ \end{lstlisting}
+ 
+ Verrücktes Beispiel:
+ \begin{lstlisting}
+ cat file | if [ $silent -eq 1 ]; then > /dev/null
+     else cat; fi
+ \end{lstlisting}
+\end{frame}
+
+\subsection{Arrays}
+\begin{frame}[fragile]
+ \frametitle{Arrays}
+ \begin{lstlisting}
+  array=(01 02 03)
+  array[17]=18
+  echo $array           # 01
+  echo ${array[0]}      # 01
+  echo ${array[1]}      # 02
+  echo ${array[*]}      # 01 02 03 17
+  echo ${#array[*]}     # 3
+ \end{lstlisting}
+ 
+ Assoziatives array:
+ \begin{lstlisting}
+  declare -A aarray
+  aarray[hund]=waldi
+  aarray[katze]=poldi
+  echo ${aarray[hund]}   # waldi
+  echo ${aarray[*]}      # waldi poldi
+ \end{lstlisting}
+\end{frame}
+
+
+\subsection{Funktionen}
+\begin{frame}[fragile]
+ \frametitle{Funktionen}
+ 
+ \begin{lstlisting}
+  func() {
+  echo 'Ich bin eine Funktion!'
+  echo "Mir wurden folgende Argumente uebergeben: $*"
+  return 4
+  echo "Auf mich hoert ja eh keiner"
+  }
+  
+  func a b c
+ \end{lstlisting}
+\end{frame}
+
+\subsection{Einige wichtige Programme \& Praktischer Teil II}
+\begin{frame}
+ \frametitle{Einige wichtige Programme II}
+ \begin{itemize}
+  \item {\tt read varname} -- Eingabe von Stdin in Variable speichern
+  \item {\tt shift} -- Argumente um ein verschieben
+  \item {\tt sleep <n>} -- n Sekunden warten
+  \item {\tt head / tail} -- Anfang / Ende von Datei/Stream zeigen
+  \item {\tt uniq} -- Doppelte Zeilen entfernen
+  \item {\tt printf}
+  \item {\tt cut -f<n>} -- nte Spalte augeben
+   \begin{itemize}
+    \item {\tt -d<x>} -- x als Spaltentrenner
+   \end{itemize}
+  \item {\tt wc} -- Zeichen (-m), Wörter (-w) oder Zeilen (-l) zählen
+  \item {\tt find} -- Dateien finden (Unzählige Optionen!)
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Zweite Ausprobier-Runde}
+ \begin{center}
+ Los!
+ \end{center}
+\end{frame}
+
+\section{Fortgeschrittenes}
+\subsection{Sed \& Awk}
+\begin{frame}
+ \frametitle{Sed}
+ Stream-Editor zum filtern und bearbeiten von Text
+ 
+ \begin{itemize}
+  \item Argumentrenner ist beliebig, üblich: /
+  \item Ersetzen aller Stellen von 'alt' durch 'neu': \\ {\tt sed 's/alt/neu/g'}
+  \item Ersetze 'a' durch 'x' und 'b' durch 'y': {\tt sed 'y/ab/xy/'}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Awk}
+ % ToDo
+\end{frame}
+
+\subsection{Prozesssteuerung}
+\begin{frame}
+ \frametitle{Prozesssteuerung}
+ \begin{itemize}
+  \item Prozesse im Hintergrund laufend starten: \& am Ende der Zeile \\
+    {\tt sleep 999 \& }
+  \item Prozessen in den Vordergrund holen: {\tt fg [<n>] }
+  \item Prozess beenden: {\tt kill <n>}
+ \end{itemize}
+\end{frame}
+
+\subsection{Mehr Bash}
+\begin{frame}[fragile]
+ \frametitle{eval}
+ \begin{lstlisting}
+  a=b
+  b=c
+  echo $$a        # 19082b
+  echo ${$a}      # "Falsche Variablenersetzung."
+  echo \$$a       # $a
+  eval echo \$$a  # c 
+ \end{lstlisting}
+\end{frame}
+
+%% besseres Beispiel, Erklärung?
+\begin{frame}
+ \frametitle{IFS}
+ \begin{lstlisting}
+ f() { echo $2 ;}
+ x=a@b@c
+ f $x     # kein output
+ IFS=@
+ f $x     # b
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Parameter Expansion}
+ 
+ Liefern den Wert der Variable…
+ \begin{itemize}
+  \item {\tt \${varname:-alternativ} } -- oder falls diese leer 'alternativ'
+  \item {\tt \${varname:offset:length} } -- auf den Bereich zugeschnitten
+  \item {\tt \${parameter/alt/neu} } -- nach Zeichenersetzung
+  \item {\tt \${\#parameter} } -- die Länge des Werts der Variable
+  \item uvm
+ \end{itemize}
+\end{frame}
+
+\end{document}
