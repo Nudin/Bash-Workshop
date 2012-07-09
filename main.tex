@@ -439,7 +439,7 @@
 \end{frame}
 
 %% besseres Beispiel, Erklärung?
-\begin{frame}
+\begin{frame}[fragile]
  \frametitle{IFS}
  \begin{lstlisting}
  f() { echo $2 ;}
@@ -455,10 +455,10 @@
  
  Liefern den Wert der Variable…
  \begin{itemize}
-  \item {\tt \${varname:-alternativ} } -- oder falls diese leer 'alternativ'
-  \item {\tt \${varname:offset:length} } -- auf den Bereich zugeschnitten
-  \item {\tt \${parameter/alt/neu} } -- nach Zeichenersetzung
-  \item {\tt \${\#parameter} } -- die Länge des Werts der Variable
+  \item {\tt \$\{varname:-alternativ\} } -- oder falls diese leer 'alternativ'
+  \item {\tt \$\{varname:offset:length\} } -- auf den Bereich zugeschnitten
+  \item {\tt \$\{parameter/alt/neu\} } -- nach Zeichenersetzung
+  \item {\tt \$\{\#parameter\} } -- die Länge des Werts der Variable
   \item uvm
  \end{itemize}
 \end{frame}
