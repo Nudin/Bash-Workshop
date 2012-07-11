@@ -22,6 +22,7 @@
 \tableofcontents
 
 \section{Grundlagen}
+
 \subsection{Geschichte \& Hintergründe}
 \begin{frame} %%Eine Folie
   \frametitle{Geschichte \& Hintergründe} %%Folientitel
@@ -69,8 +70,16 @@
     echo "Hello World"
   \end{lstlisting}
   \item She-Bang, Kommentar, echo, Anführungszeichen
+  \item Semikon ist äquivalent zu Zeilenumbruch
   \item Dateiendung: .sh
  \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Nullte Ausprobier-Runde}
+ \begin{center}
+ Los!
+ \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -105,24 +114,24 @@
 \frametitle{Arbeiten mit Datenströmen}
  \begin{itemize}
   \item Pipe: leiten Stdout von einem Programm nach Stdin eines anderen Programms um\\
-   {\tt \$ echo abc | grep a}
+   {\tt\small \$ echo abc | grep a}
   \item Umleiten in Datei\\
-   {\tt \$ echo abc 1> Dateiname}\\
-   {\tt \$ echo abc > Dateiname}\\
-   {\tt \$ echo abc >> Dateiname}
+   {\tt\small \$ echo abc 1> Dateiname}\\
+   {\tt\small \$ echo abc > Dateiname}\\
+   {\tt\small \$ echo abc >> Dateiname}
   \item Umleiten in anderen Stream\\
-   {\tt \$ echo abc 2>\&1 Dateiname}
+   {\tt\small \$ echo abc 2>\&1 Dateiname}
   \item Wilde Kombinationen möglich!\\
-   {\tt strace echo a 2>\&1 | grep open } Kurzform: {\tt |\&} \\
-   {\tt \$ find . -name '*.html' 2>\&1 1> gefundene.txt | less }
+   {\tt\small strace echo a 2>\&1 | grep open }  Kurzform: {\tt |\&} \\
+   {\tt\small \$ find . -name '*.html' 2>\&1 1> gefundene.txt | less }
   \item In Datei schreiben und auf Stdout anzeigen: \\
-   {\tt \$ echo abc | tee datei }
+   {\tt\small \$ echo abc | tee datei }
  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
  \frametitle{Kommando-Substitution}
- Wird ersetzt mit dem Stdout eines Programms
+ Wird ersetzt mit der Ausgabe (Stdout) eines Programms
  \begin{lstlisting}
    mplayer $(cat filelist)
    mplayer `cat filelist`
@@ -176,6 +185,7 @@
   \begin{itemize}
    \item Keine Variablentypen!
    \item Rechnen und Vergleichen nicht direkt möglich!
+   \item Keine Interpretation in einfachen Anführungszeichen
   \end{itemize}
  \end{alertblock}
 \end{frame}
@@ -222,7 +232,7 @@
  \end{itemize}
 \end{frame}
 
-\subsection{Rechnen}
+%\subsection{Rechnen}
 \begin{frame}[fragile]
  \frametitle{Rechnen mit Variablen}
  
@@ -411,7 +421,15 @@
 
 \begin{frame}
  \frametitle{Awk}
- % ToDo
+ \begin{block}{Awk}
+  Eine eigene Skriptsprache zur Bearbeitung und Auswertung strukturierter Textdaten!
+ \end{block}
+
+  Würde Rahmen dieses Workshops sprengen, wird aber gerne in Shell-Skripten verwendet. 
+  \bigskip
+  
+  Beispiel: \\  
+  {\tt echo a,b,c | awk -F, '\{print \$1, \$2\}' }
 \end{frame}
 
 \subsection{Prozesssteuerung}
@@ -448,6 +466,19 @@
  IFS=@
  f $x     # b
  \end{lstlisting}
+ 
+ Beispiel:
+ \begin{lstlisting} 
+ rdom() { local IFS=">"; read -d "<" T C ; }
+ 
+ while rdom; do
+     if [ "$T" = "H1" ] ; then
+                  echo Ueberschrift: $C
+     fi;
+ done < $tempfile
+ \end{lstlisting}
+
+ 
 \end{frame}
 
 \begin{frame}
@@ -461,6 +492,23 @@
   \item {\tt \$\{\#parameter\} } -- die Länge des Werts der Variable
   \item uvm
  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{Trap}
+ Abfangen von Signalen wie durch Ctr+C oder Kill um vor Beendigung noch Tätigkeiten auszuführen.
+ \bigskip
+ 
+ \begin{lstlisting}
+  trap "echo You pressed Ctr+C!" SIGINT 
+ \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Dritte Ausprobier-Runde}
+ \begin{center}
+ Los!
+ \end{center}
 \end{frame}
 
 \end{document}
