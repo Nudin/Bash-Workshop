@@ -7,7 +7,25 @@
 \usepackage{framed, color}
 \usepackage{listings}
 
-\lstset{language=bash, numbers=left, stepnumber=1, basicstyle=\footnotesize, frame=single,}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+\lstset{
+  language=bash,
+  numbers=left, 
+  stepnumber=1, 
+  numberstyle=\tiny\color{gray},
+  showspaces=false,
+  showstringspaces=false,
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  basicstyle=\footnotesize, 
+  frame=single,
+  morekeywords={elif}
+  }
 
 \usetheme{Warsaw}  %% Themenwahl
 
@@ -139,7 +157,7 @@
 \end{frame}
 
 \subsection{Einige wichtige Programme \& Praktischer Teil I}
-\begin{frame}
+\begin{frame}[<+->]
  \frametitle{Einige wichtige Programme I}
  \begin{itemize}
    \item echo -- Schreibt Argumente auf Stdout
@@ -147,7 +165,7 @@
        \item -e -- Interpretiert Kodierte Sonderzeichen
        \item -n -- Deaktiviert Zeilenvorschub am Ende
      \end{itemize}
-   \item cat -- list (mehrere) Dateien und gibt sie auf Stdout aus
+   \item cat -- liest (mehrere) Dateien und gibt sie auf Stdout aus
    \item grep -- Sucht (Stdin oder Datei) zeilenweise nach Ausdruck und gibt Zeilen mit Treffer aus (Stderr)
      \begin{itemize}
        \item -v -- gibt Zeilen ohne Treffer aus
@@ -173,13 +191,13 @@
 \begin{frame}[fragile]
  \frametitle{Variablen}
  
- \begin{verbatim}
- $ a="Hallo Welt"
- $ b=7
- $ c="a ist ${a} und b ist $b"
- $ echo $c
- a ist Hallo Welt und b ist 7
- \end{verbatim}
+ \begin{lstlisting}
+ a="Hallo Welt"
+ b=7
+ c="a ist ${a} und b ist $b"
+ echo $c
+ # Ausgabe: a ist Hallo Welt und b ist 7
+ \end{lstlisting}
  
  \begin{alertblock}{Achtung!}
   \begin{itemize}
@@ -372,6 +390,8 @@
   func() {
   echo 'Ich bin eine Funktion!'
   echo "Mir wurden folgende Argumente uebergeben: $*"
+  local x=foo
+  echo $x
   return 4
   echo "Auf mich hoert ja eh keiner"
   }
@@ -381,7 +401,7 @@
 \end{frame}
 
 \subsection{Einige wichtige Programme \& Praktischer Teil II}
-\begin{frame}
+\begin{frame}[<+->]
  \frametitle{Einige wichtige Programme II}
  \begin{itemize}
   \item {\tt read varname} -- Eingabe von Stdin in Variable speichern
@@ -502,6 +522,15 @@
  \begin{lstlisting}
   trap "echo You pressed Ctr+C!" SIGINT 
  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Debugging}
+ \begin{itemize}
+  \item Printf-Debugging: {\tt echo \$var }
+  \item {\tt set -x }
+  \item Traps
+ \end{itemize}
 \end{frame}
 
 \begin{frame}
